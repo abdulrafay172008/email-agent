@@ -116,24 +116,26 @@ async def send_single_email(recipient: Recipient, campaign: Campaign) -> bool:
             personalized_subject = personalized_subject.replace(f"{{{{{key}}}}}", str(value))
         
         # Create SendGrid message
+        html_content = f"""
+        <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                    {personalized_content.replace(chr(10), '<br>')}
+                    <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+                    <p style="font-size: 12px; color: #666;">
+                        Sent by {campaign.sender_name} | 
+                        <a href="#" style="color: #666;">Unsubscribe</a>
+                    </p>
+                </div>
+            </body>
+        </html>
+        """
+        
         message = Mail(
             from_email=os.environ.get('SENDER_EMAIL'),
             to_emails=recipient.email,
             subject=personalized_subject,
-            html_content=f"""
-            <html>
-                <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-                    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                        {personalized_content.replace(chr(10), '<br>')}
-                        <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-                        <p style="font-size: 12px; color: #666;">
-                            Sent by {campaign.sender_name} | 
-                            <a href="#" style="color: #666;">Unsubscribe</a>
-                        </p>
-                    </div>
-                </body>
-            </html>
-            """
+            html_content=html_content
         )
         
         # Send email
