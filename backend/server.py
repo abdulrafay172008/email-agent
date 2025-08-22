@@ -124,7 +124,7 @@ async def send_single_email(recipient: Recipient, campaign: Campaign) -> bool:
             <html>
                 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
                     <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                        {personalized_content.replace('\n', '<br>')}
+                        {personalized_content.replace(chr(10), '<br>')}
                         <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
                         <p style="font-size: 12px; color: #666;">
                             Sent by {campaign.sender_name} | 
